@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Feliz Cumpleaños, Mi Amor! ❤️</title>
+    <!-- Fuentes estilo nota de collage -->
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #f7ede2;
+            background-image: radial-gradient(#f2cc8f 1px, transparent 1px);
+            background-size: 20px 20px;
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 15px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* ----------------------------------------------------
+           1. EFECTO FLASH DE CÁMARA FOTOGRÁFICA (AL CARGAR)
+        ---------------------------------------------------- */
+        .camera-flash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #ffffff;
+            z-index: 9999;
+            pointer-events: none;
+            animation: photoFlash 1.6s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+        }
+
+        @keyframes photoFlash {
+            0% {
+                opacity: 1;
+                background-color: #ffffff;
+            }
+            15% {
+                opacity: 1;
+                background-color: #ffffff;
+            }
+            100% {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+        /* Canvas para animación de confeti */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 950;
+        }
+
+        /* ----------------------------------------------------
+           2. GLOBOS Y NÚMEROS 31 INTERACTIVOS
+        ---------------------------------------------------- */
+        .decorations-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 900;
+            overflow: hidden;
+        }
+
+        .pop-item {
+            position: absolute;
+            pointer-events: auto;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+            user-select: none;
+        }
+
+        .pop-item:hover {
+            transform: scale(1.15);
+        }
+
+        /* --- Estilo del Globo --- */
+        .balloon {
+            width: 75px;
+            height: 95px;
+            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+            box-shadow: inset -8px -8px 18px rgba(0,0,0,0.12), 0 8px 15px rgba(0,0,0,0.08);
+        }
+
+        .balloon::after {
+            content: '';
+            position: absolute;
+            bottom: -7px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-bottom: 9px solid inherit;
+        }
+
+        .balloon .string {
+            position: absolute;
+            bottom: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 32px;
+            background: rgba(0,0,0,0.2);
+        }
+
+        .bg-color-1 { background-color: #e76f51; }
+        .bg-color-1::after { border-bottom-color: #e76f51; }
+
+        .bg-color-2 { background-color: #f4a261; }
+        .bg-color-2::after { border-bottom-color: #f4a261; }
+
+        .bg-color-3 { background-color: #e63946; }
+        .bg-color-3::after { border-bottom-color: #e63946; }
+
+        .bg-color-4 { background-color: #2a9d8f; }
+        .bg-color-4::after { border-bottom-color: #2a9d8f; }
+
+        /* --- Estilo del Número 31 --- */
+        .number-31 {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .number-31 .digits {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 3.5rem;
+            color: #d4a373;
+            text-shadow: 2px 3px 6px rgba(0, 0, 0, 0.15), 0 0 10px rgba(244, 162, 97, 0.4);
+            letter-spacing: -2px;
+            line-height: 1;
+        }
+
+        .number-31 .string {
+            width: 2px;
+            height: 40px;
+            background: rgba(0,0,0,0.2);
+            margin-top: 5px;
+        }
+
+        /* ----------------------------------------------------
+           3. REPRODUCTOR DE MÚSICA CON EFECTO VINILO GIRATORIO
+        ---------------------------------------------------- */
+        .music-player {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #e76f51;
+            color: white;
+            border: none;
+            padding: 10px 18px 10px 12px;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 100;
+            transition: background-color 0.3s;
+        }
+
+        .music-player:hover {
+            background-color: #d85736;
+        }
+
+        /* Diseño del mini disco de vinilo */
+        .vinyl-container {
+            width: 36px;
+            height: 36px;
+            background-color: #111;
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 5px rgba(0,0,0,0.5);
+            border: 2px solid #333;
+        }
+
+        /* Surcos del vinilo */
+        .vinyl-container::before {
+            content: '';
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border: 1px dashed rgba(255,255,255,0.25);
+            border-radius: 50%;
+        }
+
+        /* Etiqueta central del vinilo */
+        .vinyl-container::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background-color: #e63946;
+            border-radius: 50%;
+        }
+
+        /* Animación de rotación del vinilo */
+        .spinning {
+            animation: spinVinyl 2s linear infinite;
+        }
+
+        @keyframes spinVinyl {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* ----------------------------------------------------
+           ESTILOS PRINCIPALES DE LA CARTA
+        ---------------------------------------------------- */
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(5px);
+            padding: 40px 25px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+            border: 2px dashed #f4a261;
+            position: relative;
+            z-index: 10;
+        }
+
+        h1 {
+            font-family: 'Caveat', cursive;
+            font-size: 3.2rem;
+            color: #e76f51;
+            text-align: center;
+            margin-bottom: 25px;
+            text-shadow: 1px 1px 0px rgba(0,0,0,0.1);
+        }
+
+        /* Estilo Collage */
+        .collage-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .polaroid {
+            background: white;
+            padding: 12px 12px 25px 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+            width: 240px;
+            transition: transform 0.3s ease, z-index 0.3s;
+            position: relative;
+        }
+
+        .polaroid img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 2px;
+        }
+
+        .polaroid .caption {
+            font-family: 'Caveat', cursive;
+            font-size: 1.5rem;
+            color: #2b2d42;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .polaroid:nth-child(1) { transform: rotate(-4deg); }
+        .polaroid:nth-child(2) { transform: rotate(3deg); }
+        .polaroid:nth-child(3) { transform: rotate(-2deg); }
+
+        .polaroid:hover {
+            transform: scale(1.1) rotate(0deg);
+            z-index: 10;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+        }
+
+        /* Carta de texto con efecto máquina de escribir */
+        .letter-card {
+            background: #fffdf9;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.03);
+            border-left: 5px solid #e76f51;
+            margin-top: 20px;
+            color: #3d405b;
+            line-height: 1.8;
+            font-size: 1.05rem;
+            min-height: 180px;
+        }
+
+        .letter-card p {
+            margin-bottom: 15px;
+            white-space: pre-wrap; /* Saltos de línea del tipeo */
+        }
+
+        .signature {
+            font-family: 'Caveat', cursive;
+            font-size: 2rem;
+            text-align: right;
+            color: #e76f51;
+            margin-top: 10px;
+            opacity: 0;
+            transition: opacity 1s ease-in;
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2.5rem; }
+            .polaroid { width: 100%; max-width: 280px; }
+            .polaroid:nth-child(1), .polaroid:nth-child(2), .polaroid:nth-child(3) { transform: rotate(0deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Flash de cámara -->
+    <div class="camera-flash"></div>
+
+    <!-- Canvas para el confeti -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- Contenedor donde JavaScript genera globos y números -->
+    <div class="decorations-container" id="decorations-container"></div>
+
+    <!-- Audio de Fondo -->
+    <audio id="bg-music" loop preload="auto">
+        <source src="Estaré.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Botón de música con Vinilo Giratorio -->
+    <button class="music-player" id="music-btn" onclick="toggleMusic()">
+        <div class="vinyl-container" id="vinyl-icon"></div>
+        <span id="music-text">A pesar de lo que sea ahí... "Estaré"</span>
+    </button>
+
+    <div class="container">
+        <h1>¡Feliz Cumpleaños, Mi Amor! ❤️</h1>
+
+        <!-- Collage -->
+        <div class="collage-grid">
+            <div class="polaroid">
+                <img src="1.jpeg" alt="Momento 1">
+                <div class="caption">De las primeras fotos 📸</div>
+            </div>
+
+            <div class="polaroid">
+                <img src="2.jpeg" alt="Momento 2">
+                <div class="caption">De los lindos momentos que hemos pasado mientras podía ir a la U a vistarte </div>
+            </div>
+
+            <div class="polaroid">
+                <img src="3.jpeg" alt="Momento 3">
+                <div class="caption">De las últimitas y mejores fotos que nos tomamos ❤️</div>
+            </div>
+        </div>
+
+        <!-- Dedicatoria con tipeo automático -->
+        <div class="letter-card">
+            <p id="typed-text"></p>
+            <div class="signature" id="signature">Con todo el amor del mundo, este cuerpecito de brazos hecho palo ✨</div>
+        </div>
+    </div>
+
+    <script>
+        // --- Control de Música y Vinilo ---
+        const music = document.getElementById('bg-music');
+        const musicBtn = document.getElementById('music-btn');
+        const musicText = document.getElementById('music-text');
+        const vinylIcon = document.getElementById('vinyl-icon');
+        let isPlaying = false;
+
+        function toggleMusic() {
+            if (isPlaying) {
+                music.pause();
+                musicText.textContent = 'A pesar de lo que sea ahí... "Estaré"';
+                vinylIcon.classList.remove('spinning');
+                musicBtn.style.backgroundColor = "#e76f51";
+            } else {
+                music.play();
+                musicText.textContent = "Pausar Música 🎵";
+                vinylIcon.classList.add('spinning');
+                musicBtn.style.backgroundColor = "#2a9d8f";
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // --- Efecto Máquina de Escribir Dedicatoria ---
+        const messageText = `Hoy es un día increíble porque celebramos tu vida. Gracias por ser la culpable de mis sonrisas coquetas, por tu apoyo incondicional y por ser la complice ideal para cada aventura que se presente en nuestas vidas.
+
+Espero que esta primavera más te traiga muchísima felicidad, salud y metas cumplidas. Me siento muy afortunado de que Diosito me haya puesto en tu camino y así poder festejar este día contigo.
+
+¡Te amo y deseo que todos tus deseos se hagan realidad!`;
+
+        const typedElement = document.getElementById('typed-text');
+        const signatureElement = document.getElementById('signature');
+        let charIndex = 0;
+
+        function typeWriter() {
+            if (charIndex < messageText.length) {
+                typedElement.textContent += messageText.charAt(charIndex);
+                charIndex++;
+                setTimeout(typeWriter, 100); // Velocidad del tipeo (milisegundos)
+            } else {
+                // Mostrar firma al terminar la carta
+                signatureElement.style.opacity = "1";
+            }
+        }
+
+        // Iniciar el efecto de tipeo después de que pase el flash de la cámara (1.5 segundos)
+        setTimeout(typeWriter, 1600);
+
+        // --- Sistema de Confeti Canvas y Elementos Interactivos ---
+        const canvas = document.getElementById('confetti-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const colors = ['#e76f51', '#f4a261', '#e63946', '#2a9d8f', '#e9c46a', '#d4a373', '#ffffff'];
+
+        class Particle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 8 + 4;
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.vx = (Math.random() - 0.5) * 14;
+                this.vy = (Math.random() - 0.7) * 14;
+                this.gravity = 0.3;
+                this.rotation = Math.random() * 360;
+                this.rotationSpeed = (Math.random() - 0.5) * 12;
+                this.opacity = 1;
+            }
+
+            update() {
+                this.vy += this.gravity;
+                this.x += this.vx;
+                this.y += this.vy;
+                this.rotation += this.rotationSpeed;
+                this.opacity -= 0.015;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate((this.rotation * Math.PI) / 180);
+                ctx.globalAlpha = Math.max(0, this.opacity);
+                ctx.fillStyle = this.color;
+                ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
+                ctx.restore();
+            }
+        }
+
+        const container = document.getElementById('decorations-container');
+        let activeItems = [];
+
+        function spawnItem(customClass, htmlContent, leftPercent, delay) {
+            const el = document.createElement('div');
+            el.className = `pop-item ${customClass}`;
+            el.innerHTML = htmlContent;
+            
+            let itemData = {
+                element: el,
+                x: (window.innerWidth * leftPercent) / 100,
+                y: window.innerHeight + 150,
+                speed: Math.random() * 1.2 + 1.2,
+                wobble: Math.random() * 100,
+                wobbleSpeed: Math.random() * 0.03 + 0.02
+            };
+
+            el.style.left = itemData.x + 'px';
+            el.style.top = itemData.y + 'px';
+
+            el.addEventListener('pointerdown', (e) => {
+                e.stopPropagation();
+                const rect = el.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+
+                for (let i = 0; i < 45; i++) {
+                    particles.push(new Particle(centerX, centerY));
+                }
+
+                el.remove();
+                activeItems = activeItems.filter(item => item !== itemData);
+            });
+
+            container.appendChild(el);
+            setTimeout(() => {
+                activeItems.push(itemData);
+            }, delay);
+        }
+
+        function initDecorations() {
+            spawnItem('balloon bg-color-1', '<div class="string"></div>', 12, 500);
+            spawnItem('balloon bg-color-2', '<div class="string"></div>', 28, 1500);
+            spawnItem('number-31', '<span class="digits">31</span><div class="string"></div>', 44, 1000);
+            spawnItem('balloon bg-color-3', '<div class="string"></div>', 62, 800);
+            spawnItem('number-31', '<span class="digits">31</span><div class="string"></div>', 75, 2000);
+            spawnItem('balloon bg-color-4', '<div class="string"></div>', 88, 1200);
+        }
+
+        initDecorations();
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (let i = particles.length - 1; i >= 0; i--) {
+                particles[i].update();
+                particles[i].draw();
+                if (particles[i].opacity <= 0) {
+                    particles.splice(i, 1);
+                }
+            }
+
+            for (let i = activeItems.length - 1; i >= 0; i--) {
+                let item = activeItems[i];
+                item.y -= item.speed;
+                item.wobble += item.wobbleSpeed;
+                let currentX = item.x + Math.sin(item.wobble) * 25;
+
+                item.element.style.top = item.y + 'px';
+                item.element.style.left = currentX + 'px';
+
+                if (item.y < -200) {
+                    item.y = window.innerHeight + 100;
+                    item.x = Math.random() * (window.innerWidth - 100);
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>
